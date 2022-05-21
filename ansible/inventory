@@ -1,0 +1,7 @@
+[server]
+vm1 ansible_host=51.250.83.39 ansible_user=ubuntu ansible_python_interpreter=/usr/bin/python3
+
+[all:vars]
+ansible_ssh_extra_args='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+#postgresql_version="12"
+#postgresql_data_directory="/var/lib/postgresql/{{ postgresql_version }}/ma"
