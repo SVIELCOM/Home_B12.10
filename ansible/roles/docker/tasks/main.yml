@@ -34,18 +34,40 @@
 - name: Install docker engine (RHEL/CentOS)
   when: ansible_os_family == "RedHat"
   yum:
-    name: "docker-ce"
+    name: "{{ packages }}"
     state: present
+    vars:
+      packages:
+      - docker-ce 
+      - docker-ce-cli 
+      - docker-compose
 
 - name: Install docker engine (Debian/Ubuntu)
   when: ansible_os_family == "Debian"
   apt:
     update_cache: yes
-    name: "docker-ce"
+    name: "{{ packages }}"
     state: present
+    vars:
+      packages:
+      - docker-ce 
+      - docker-ce-cli 
+      - docker-compose
 
 - name: Prevent Docker from being upgraded
   when: ansible_os_family == "Debian"
   dpkg_selections:
     name: docker-ce
     selection: hold
+
+- name: Add ubuntu user to docker group
+  user:
+      name: ubuntu
+      group: docker 
+
+- name: Restart docker
+  service:
+      name: docker
+      enabled: yes
+      daemon_reload: yes
+      state: restarted       
