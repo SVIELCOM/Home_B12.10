@@ -1,0 +1,44 @@
+groups: 
+- name: example
+  rules:
+  - alert: PrometheusTargetMissing
+    expr: up == 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Prometheus target missing (instance {{ $labels.instance }})"
+      description: "A Prometheus target has disappeared. An exporter might be crashed. VALUE = {{ $value }}  LABELS: {{ $labels }}"
+
+- name: statuscode_error
+  rules:
+  - alert: StatuscodeChanged
+    expr: probe_http_status_code != 200
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "SkillFactory site returns wrong status code (instance {{ $labels.instance }})"
+      description: "VALUE = {{ $value }}  LABELS: {{ $labels }}"
+
+- name: httpresponsetime
+  rules:
+  - alert: ResponseTime
+    expr: (probe_http_duration_seconds{instance="https://skillfactory.ru", job="blackbox", phase="connect"}) > 5
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "SkillFactory do not response (instance {{ $labels.instance }})"
+      description: "VALUE = {{ $value }}  LABELS: {{ $labels }}"
+
+- name: prometheuswasdown
+  rules:
+  - alert: PrometheusServerUpTime
+    expr: (node_time_seconds - node_boot_time_seconds) < 60
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Server has been rebooted (instance {{ $labels.instance }})"
+      description: "VALUE = {{ $value }}  LABELS: {{ $labels }}"

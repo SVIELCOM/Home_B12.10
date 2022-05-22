@@ -31,28 +31,26 @@
     gpgcheck: yes
     gpgkey: https://download.docker.com/linux/centos/gpg
 
-- name: Install docker engine (RHEL/CentOS)
+- name: Install docker (RHEL/CentOS)
   when: ansible_os_family == "RedHat"
   yum:
-    name: "{{ packages }}"
-    state: present
-    vars:
-      packages:
+    name:
       - docker-ce 
       - docker-ce-cli 
       - docker-compose
-
-- name: Install docker engine (Debian/Ubuntu)
+    state: present
+    
+- name: Install docker (Debian/Ubuntu)
   when: ansible_os_family == "Debian"
   apt:
-    update_cache: yes
-    name: "{{ packages }}"
-    state: present
-    vars:
-      packages:
+    package:
       - docker-ce 
       - docker-ce-cli 
       - docker-compose
+    update_cache: yes
+    state: present
+
+      
 
 - name: Prevent Docker from being upgraded
   when: ansible_os_family == "Debian"

@@ -1,0 +1,15 @@
+round((probe_ssl_earliest_cert_expiry - time())/84600) - ssl
+node_memory_MemFree_bytes - free memory
+
+CPU utilization
+(((count(count(node_cpu_seconds_total{instance="$node",job="$job"}) by (cpu))) - avg(sum by (mode)(rate(node_cpu_seconds_total{mode='idle',instance="$node",job="$job"}[$__rate_interval])))) * 100) / count(count(node_cpu_seconds_total{instance="$node",job="$job"}) by (cpu))
+
+CPU cores
+count(count(node_cpu_seconds_total{instance="$node",job="$job"}) by (cpu))
+
+Root FS Used
+100 - ((node_filesystem_avail_bytes{instance="$node",job="$job",mountpoint="/",fstype!="rootfs"} * 100) / node_filesystem_size_bytes{instance="$node",job="$job",mountpoint="/",fstype!="rootfs"})
+
+RAM used
+((node_memory_MemTotal_bytes{instance="$node",job="$job"} - node_memory_MemFree_bytes{instance="$node",job="$job"}) / (node_memory_MemTotal_bytes{instance="$node",job="$job"} )) * 100
+100 - ((node_memory_MemAvailable_bytes{instance="$node",job="$job"} * 100) / node_memory_MemTotal_bytes{instance="$node",job="$job"})
